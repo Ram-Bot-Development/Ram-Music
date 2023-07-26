@@ -36,7 +36,7 @@ module.exports = {
         const vc = interaction.member.voice.channel;
         
         if (!vc)
-            return int.reply({
+            return interaction.reply({
                 content: "You must be in a voice channel!",
                 ephemeral: true,
             });

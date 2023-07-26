@@ -17,6 +17,8 @@ module.exports = {
         let queue = await client.distube.getQueue(interaction.member.voice.channel) || "Null";
         if (queue === "Null") return interaction.reply({content: "Nothings playing", ephemeral: true});
 
+        if(queue.songs.length < 2) return interaction.reply("No more songs in queue")
+
         if(extras.vc.members?.size < 3) { // if 2 or more members in the not including the bot it will  create a vote
           return  skiped(queue, interaction, await queue.songs[0], await queue.songs[1]);
         } else { 

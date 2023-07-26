@@ -66,7 +66,7 @@ module.exports = async (bot) => {
         let currenttime = now.getSeconds();
         now.setSeconds(currenttime + 8);
         
-            embed.setDescription(`Song: ${track.name}\n Author: ${track.author} \n  duration: ${moment(now.getTime()).format("mm:ss")}/${moment(final.getTime()).format("mm:ss")}`)
+            embed.setDescription(`Song: ${track.name}\n Author: ${track.uploader.name} \n  duration: ${moment(now.getTime()).format("mm:ss")}/${moment(final.getTime()).format("mm:ss")}`)
         
 
         msg.edit({embeds: [embed]})
@@ -77,7 +77,11 @@ module.exports = async (bot) => {
     })
 
    
-
+    .on('finishSong', queue => {
+    queue.textChannel?.send('Finish song!'),
+    clearInterval(queue.currentInt)
+    }
+)
     
 
     .on("finsih", async (queue) => {
@@ -114,6 +118,7 @@ module.exports = async (bot) => {
                 .join("\n")}\n*Enter anything else or wait 60 seconds to cancel*`
         );
     })
+    
     // DisTubeOptions.searchSongs = true
     .on("searchCancel", (message) =>
         message.channel.send(`${emojis.error} | Searching canceled`)
@@ -121,9 +126,17 @@ module.exports = async (bot) => {
     .on("error", (channel, e) => {
         channel.send(`${emojis.error} | An error encountered: ${e}`);
         console.error(e);
+        clearInterval(queue.currentInt);
     })
-    .on("empty", (channel) =>
+    .on('disconnect', queue => {
+		queue.textChannel.send('Disconnected!')
+        clearInterval(queue.currentInt);
+    }
+	)
+    .on("empty", (channel) => {
         channel.send("Voice channel is empty! Leaving the channel...")
+        clearInterval(queue.currentInt)
+    }
     )
     .on("searchNoResult", (message) =>
         message.channel.send(`${emojis.error} | No result found!`)
