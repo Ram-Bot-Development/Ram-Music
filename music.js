@@ -126,7 +126,7 @@ module.exports = async (bot) => {
     .on("error", (channel, e) => {
         channel.send(`${emojis.error} | An error encountered: ${e}`);
         console.error(e);
-        clearInterval(queue.currentInt);
+        //clearInterval(queue.currentInt);
     })
     .on('disconnect', queue => {
 		queue.textChannel.send('Disconnected!')
